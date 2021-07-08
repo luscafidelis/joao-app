@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "347378793892",
+    "project_id": "joaoapp-chat",
+    "storage_bucket": "joaoapp-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347378793892:android:9ea261a29a687203ce5531",
+        "android_client_info": {
+          "package_name": "com.fidelis.joaochatbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347378793892-6sqv2f56417k5dgth1s81re8t1bde1ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfwReerhk4DGR1-HxcnmBzzL9x9uq8CoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347378793892-6sqv2f56417k5dgth1s81re8t1bde1ek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
