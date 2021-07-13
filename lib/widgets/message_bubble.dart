@@ -1,11 +1,17 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:joaoapp/model/time_ago.dart';
 
 class MessageBubble extends StatelessWidget{
 
   final String message;
+  final String username;
   final bool belongsToMe;
+  final Timestamp sentOn;
 
-  MessageBubble(this.message,this.belongsToMe);
+  MessageBubble(this.message, this.username, this.belongsToMe, this.sentOn);
 
   @override
   Widget build (BuildContext context){
@@ -31,7 +37,7 @@ class MessageBubble extends StatelessWidget{
             ]
           ),
 
-          width: 140,
+          width: MediaQuery.of(context).size.width * 0.75,
           padding: EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 16
@@ -40,7 +46,85 @@ class MessageBubble extends StatelessWidget{
             vertical: 4,
             horizontal: 8
           ),
-          child: Text(message) 
+          child: Column(
+            crossAxisAlignment: belongsToMe ? CrossAxisAlignment.end: CrossAxisAlignment.start,
+            children: <Widget>[
+              
+              //Remetente
+              Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: belongsToMe ?
+                Row(
+                  mainAxisAlignment: belongsToMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: [                   
+
+                    //Nome
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ), 
+                      ),
+                    ),
+
+                    //Avatar
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.grey,
+                      child: belongsToMe ?
+                       const Icon(Icons.face_outlined, color: Colors.white):
+                       const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
+                    )
+                  ],
+
+                  
+
+                ):
+                Row(
+                  mainAxisAlignment: belongsToMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: [
+
+                    //Avatar
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.grey,
+                      child: belongsToMe ?
+                       const Icon(Icons.face_outlined, color: Colors.white):
+                       const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
+                    ),
+
+                    //Nome
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ), 
+                      ),
+                    )
+                  ],
+                )
+                
+                ,
+              ),
+
+              //Mensagem
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  message,
+                  textAlign: TextAlign.start,  
+                ),
+              ),
+              Text(
+                TimeAgo.timeAgoSinceDate(sentOn.toDate().toString()),
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 10
+                )),
+            ],
+          ) 
         ,)
       ]
     );
