@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:joaoapp/widgets/message_bubble.dart';
+import 'package:joaoapp/widgets/options_bubble.dart';
 
 class Messages extends StatelessWidget{
 
@@ -18,11 +19,22 @@ class Messages extends StatelessWidget{
           reverse: true,
           shrinkWrap: true,
           itemCount: chatDocs.length,
-          itemBuilder: (ctx,i) => MessageBubble(
-            chatDocs[i]['text'],
-            chatDocs[i]['user'],
-            chatDocs[i]['userID'] == 'test-user'? true : false,
-            chatDocs[i]['createdAt'])
+          itemBuilder: (ctx,i) {
+
+            if(chatDocs[i]['type'] == 'choice')
+              return OptionsBubble(
+                chatDocs[i]['text'],
+                chatDocs[i]['user'],
+                chatDocs[i]['userID'] == 'test-user'? true : false,
+                chatDocs[i]['createdAt'],
+                chatDocs[i]['options']);
+
+            return MessageBubble(
+              chatDocs[i]['text'],
+              chatDocs[i]['user'],
+              chatDocs[i]['userID'] == 'test-user'? true : false,
+              chatDocs[i]['createdAt']);
+          } 
         );
       }
     );

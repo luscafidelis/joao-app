@@ -2,14 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:joaoapp/model/time_ago.dart';
 
-class MessageBubble extends StatelessWidget{
+class OptionsBubble extends StatelessWidget{
 
   final String message;
   final String username;
   final bool belongsToMe;
   final Timestamp sentOn;
+  final List<dynamic> options;  
 
-  MessageBubble(this.message, this.username, this.belongsToMe, this.sentOn);
+  OptionsBubble(this.message, this.username, this.belongsToMe, this.sentOn, this.options);
+
+  Future <void> _answerMessage(answer) async{
+
+    FirebaseFirestore.instance.collection('chat').add(
+      {
+        'text': answer,
+        'createdAt': Timestamp.now(),
+        'userID': 'test-user',
+        'user': 'Lucas',
+        'type': 'message'
+      }
+    ); 
+  }
 
   @override
   Widget build (BuildContext context){
@@ -109,12 +123,37 @@ class MessageBubble extends StatelessWidget{
 
               //Mensagem
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  message,
-                  textAlign: TextAlign.start,  
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    //Mensagem
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        message,
+                        textAlign: TextAlign.start,  
+                      ),
+                    ),
+                    
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 45)),
+                      onPressed: (){_answerMessage(options[0]);}, child: Text(options[0])),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 45)),
+                      onPressed: (){_answerMessage(options[1]);}, child: Text(options[1])),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 45)),
+                      onPressed: (){_answerMessage(options[2]);}, child: Text(options[2])),                    
+                  ]
+                )
                 ),
-              ),
+
+              //Data de envio da mensagem
               Text(
                 TimeAgo.timeAgoSinceDate(sentOn.toDate().toString()),
                 style: TextStyle(
@@ -125,6 +164,7 @@ class MessageBubble extends StatelessWidget{
           ) 
         ,)
       ]
+    
     );
   }
 }
