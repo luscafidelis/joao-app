@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:joaoapp/widgets/message_bubble.dart';
 import 'package:joaoapp/widgets/options_bubble.dart';
+import 'package:joaoapp/widgets/video_bubble.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Messages extends StatelessWidget{
 
@@ -28,6 +30,21 @@ class Messages extends StatelessWidget{
                 chatDocs[i]['userID'] == 'test-user'? true : false,
                 chatDocs[i]['createdAt'],
                 chatDocs[i]['options']);
+
+            if(chatDocs[i]['type'] == 'video')
+              return VideoBubble(
+                chatDocs[i]['text'],
+                chatDocs[i]['user'],
+                chatDocs[i]['userID'] == 'test-user'? true : false,
+                chatDocs[i]['createdAt'],
+                new YoutubePlayerController(
+                  initialVideoId: chatDocs[i]['video'],
+                  flags: YoutubePlayerFlags(
+                      autoPlay: false,
+                      mute: false,
+                  ),
+                )
+              );
 
             return MessageBubble(
               chatDocs[i]['text'],
