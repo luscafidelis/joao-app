@@ -7,7 +7,7 @@ class TimeAgo{
     final difference = date2.difference(notificationDate);
 
     if (difference.inDays > 8) {
-      return dateString;
+      return "Semanas atrás";
     } else if ((difference.inDays / 7).floor() >= 1) {
       return (numericDates) ? '7 dias atrás' : 'Semana passada';
     } else if (difference.inDays >= 2) {

@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:joaoapp/model/time_ago.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class MessageBubble extends StatelessWidget{
+class VideoBubble extends StatelessWidget{
 
   final String message;
   final String username;
   final bool belongsToMe;
   final Timestamp sentOn;
+  final YoutubePlayerController _controller;
 
-  MessageBubble(this.message, this.username, this.belongsToMe, this.sentOn);
+  VideoBubble(this.message, this.username, this.belongsToMe, this.sentOn, this._controller);
 
   @override
   Widget build (BuildContext context){
@@ -18,7 +20,7 @@ class MessageBubble extends StatelessWidget{
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: belongsToMe ? Color.fromRGBO(245, 245, 245, 1) : Colors.white,
+            color: belongsToMe ? Colors.grey : Colors.grey[100],
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -27,9 +29,9 @@ class MessageBubble extends StatelessWidget{
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 5,
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 0.2,
+                blurRadius: 1,
                 offset: Offset(1, 1),
               ),
             ]
@@ -62,6 +64,7 @@ class MessageBubble extends StatelessWidget{
                       child: Text(username,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(33, 33, 33, 1)
                         ), 
                       ),
                     ),
@@ -69,7 +72,7 @@ class MessageBubble extends StatelessWidget{
                     //Avatar
                     CircleAvatar(
                       radius: 15,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: belongsToMe ? Colors.grey : Colors.redAccent,
                       child: belongsToMe ?
                        const Icon(Icons.face_outlined, color: Colors.white):
                        const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
@@ -86,7 +89,7 @@ class MessageBubble extends StatelessWidget{
                     //Avatar
                     CircleAvatar(
                       radius: 15,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: belongsToMe ? Colors.grey : Colors.redAccent,
                       child: belongsToMe ?
                        const Icon(Icons.face_outlined, color: Colors.white):
                        const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
@@ -98,6 +101,7 @@ class MessageBubble extends StatelessWidget{
                       child: Text(username,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(33, 33, 33, 1)
                         ), 
                       ),
                     )
@@ -109,22 +113,43 @@ class MessageBubble extends StatelessWidget{
 
               //Mensagem
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  message,
-                  textAlign: TextAlign.start,  
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    //Mensagem
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        message,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(                                                  
+                          color: Color.fromRGBO(33, 33, 33, 1)   
+                        ),
+                      ),
+                    ),
+                    
+                    YoutubePlayerIFrame(
+                      controller: _controller,
+                      aspectRatio: 16 / 9,
+                    ),
+                  ]
+                )
                 ),
-              ),
+
+              //Data de envio da mensagem
               Text(
                 TimeAgo.timeAgoSinceDate(sentOn.toDate().toString()),
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.grey[600],
                   fontSize: 10
                 )),
             ],
           ) 
         ,)
       ]
+    
     );
   }
 }

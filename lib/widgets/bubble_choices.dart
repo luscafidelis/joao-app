@@ -1,17 +1,29 @@
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:joaoapp/model/time_ago.dart';
 
-class VideoBubble extends StatelessWidget{
+class OptionsBubble extends StatelessWidget{
 
   final String message;
   final String username;
   final bool belongsToMe;
   final Timestamp sentOn;
-  final YoutubePlayerController _controller;
+  final List<dynamic> options;  
 
-  VideoBubble(this.message, this.username, this.belongsToMe, this.sentOn, this._controller);
+  OptionsBubble(this.message, this.username, this.belongsToMe, this.sentOn, this.options);
+
+  Future <void> _answerMessage(answer) async{
+
+    FirebaseFirestore.instance.collection('chat').add(
+      {
+        'text': answer,
+        'createdAt': Timestamp.now(),
+        'userID': 'test-user',
+        'user': 'Lucas',
+        'type': 'message'
+      }
+    ); 
+  }
 
   @override
   Widget build (BuildContext context){
@@ -20,7 +32,7 @@ class VideoBubble extends StatelessWidget{
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: belongsToMe ? Color.fromRGBO(245, 245, 245, 1) : Colors.white,
+            color: belongsToMe ? Colors.grey : Colors.grey[100],            
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -29,9 +41,9 @@ class VideoBubble extends StatelessWidget{
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 5,
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 0.2,
+                blurRadius: 1,
                 offset: Offset(1, 1),
               ),
             ]
@@ -64,6 +76,7 @@ class VideoBubble extends StatelessWidget{
                       child: Text(username,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(33, 33, 33, 1)
                         ), 
                       ),
                     ),
@@ -71,7 +84,7 @@ class VideoBubble extends StatelessWidget{
                     //Avatar
                     CircleAvatar(
                       radius: 15,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: belongsToMe ? Colors.grey : Colors.redAccent,
                       child: belongsToMe ?
                        const Icon(Icons.face_outlined, color: Colors.white):
                        const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
@@ -88,7 +101,7 @@ class VideoBubble extends StatelessWidget{
                     //Avatar
                     CircleAvatar(
                       radius: 15,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: belongsToMe ? Colors.grey : Colors.redAccent,
                       child: belongsToMe ?
                        const Icon(Icons.face_outlined, color: Colors.white):
                        const Icon(Icons.tag_faces_sharp, color: Colors.white)                           
@@ -100,6 +113,7 @@ class VideoBubble extends StatelessWidget{
                       child: Text(username,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(33, 33, 33, 1)
                         ), 
                       ),
                     )
@@ -121,15 +135,31 @@ class VideoBubble extends StatelessWidget{
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Text(
                         message,
-                        textAlign: TextAlign.start,  
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Color.fromRGBO(33, 33, 33, 1)
+                        ),
                       ),
                     ),
                     
-                    YoutubePlayer(
-                      controller: _controller,
-                      showVideoProgressIndicator: true,
-                      aspectRatio: 16/9,
-                    ), 
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 45),
+                        primary: Colors.redAccent,
+                        onPrimary: Colors.white),
+                      onPressed: (){_answerMessage(options[0]);}, child: Text(options[0])),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 45),
+                        primary: Colors.redAccent,
+                        onPrimary: Colors.white),
+                      onPressed: (){_answerMessage(options[1]);}, child: Text(options[1])),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 45),
+                        primary: Colors.redAccent,
+                        onPrimary: Colors.white),
+                      onPressed: (){_answerMessage(options[2]);}, child: Text(options[2])),                    
                   ]
                 )
                 ),
@@ -138,8 +168,8 @@ class VideoBubble extends StatelessWidget{
               Text(
                 TimeAgo.timeAgoSinceDate(sentOn.toDate().toString()),
                 style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 10
+                  color: Colors.grey[600],
+                  fontSize: 10,                  
                 )),
             ],
           ) 
